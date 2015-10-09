@@ -1,7 +1,7 @@
 ---
 
 dependencies:
-  - { role: hashbangcode.tomcat }
+  - { role:  ansible-role-tomcat }
 
 galaxy_info:
   author: philipnorton42
