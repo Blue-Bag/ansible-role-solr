@@ -4,3 +4,11 @@
 # accepted values are 'search_api_solr' or 'apachesolr'
 drupal_solr_package: "search_api_solr"
 default_collection_name: "vlad"
+
+solr_version: '4.7.2'
+
+# replace this with your ansible main_user
+solr_user: vagrant
+
+# http://www.mirrorservice.org/sites/ftp.apache.org/lucene/solr
+solr_mirror: 'http://archive.apache.org/dist/lucene/solr'
