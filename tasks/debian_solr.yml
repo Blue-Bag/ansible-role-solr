@@ -1,20 +1,20 @@
 ---
 - name: download Solr
-  command: wget {{ solr_mirror }}/{{ solr_version }}/solr-{{ solr_version }}.tgz chdir=/home/{{ user }} creates=/home/{{ user }}/solr-{{ solr_version }}.tgz
+  command: wget {{ solr_mirror }}/{{ solr_version }}/solr-{{ solr_version }}.tgz chdir=/home/{{ solr_user }} creates=/home/{{ solr_user }}/solr-{{ solr_version }}.tgz
 
 - name: extract Solr
-  command: tar -zxf /home/{{ user }}/solr-{{ solr_version }}.tgz chdir=/home/{{ user }} creates=/home/{{ user }}/solr-{{ solr_version }}
+  command: tar -zxf /home/{{ solr_user }}/solr-{{ solr_version }}.tgz chdir=/home/{{ solr_user }} creates=/home/{{ solr_user }}/solr-{{ solr_version }}
 
 - name: copy Solr war file
-  command: cp /home/{{ user }}/solr-{{ solr_version }}/dist/solr-{{ solr_version }}.war /var/lib/tomcat6/webapps/solr.war creates=/var/lib/tomcat6/webapps/solr.war
+  command: cp /home/{{ solr_user }}/solr-{{ solr_version }}/dist/solr-{{ solr_version }}.war /var/lib/tomcat6/webapps/solr.war creates=/var/lib/tomcat6/webapps/solr.war
   sudo: true
 
 - name: list solr files (in order to copy)
-  command: ls -1 /home/{{ user }}/solr-{{ solr_version }}/example/solr/
+  command: ls -1 /home/{{ solr_user }}/solr-{{ solr_version }}/example/solr/
   register: solrfiles
 
 - name: copy Solr instance
-  command: cp -ar /home/{{ user }}/solr-{{ solr_version }}/example/solr/{{ item }} /home/solr creates=/home/solr/{{ item }}
+  command: cp -ar /home/{{ solr_user }}/solr-{{ solr_version }}/example/solr/{{ item }} /home/solr creates=/home/solr/{{ item }}
   sudo: true
   with_items: solrfiles.stdout_lines
 
@@ -35,12 +35,12 @@
   sudo: true
 
 - name: list all jar files that are part of solr (in order to copy)
-  shell: ls -1 /home/{{ user }}/solr-{{ solr_version }}/dist/ | grep .jar
+  shell: ls -1 /home/{{ solr_user }}/solr-{{ solr_version }}/dist/ | grep .jar
   register: solrjarfiles
   changed_when: false
 
 - name: copy solr lib files
-  command: cp /home/{{ user }}/solr-{{ solr_version }}/dist/{{ item }} /home/solr/lib/{{ item }} creates=/home/solr/lib/{{ item }}
+  command: cp /home/{{ solr_user }}/solr-{{ solr_version }}/dist/{{ item }} /home/solr/lib/{{ item }} creates=/home/solr/lib/{{ item }}
   with_items: solrjarfiles.stdout_lines
   sudo: true
 
@@ -63,7 +63,7 @@
 - name: get Drupal solr integration via search_api_solr
   git:
     repo: http://git.drupal.org/project/{{ drupal_solr_package }}.git
-    dest: /home/{{ user }}/drupal_solr
+    dest: /home/{{ solr_user }}/drupal_solr
     version: 7.x-1.6
     depth: 1
   when: drupal_solr_package == "search_api_solr"
@@ -71,20 +71,20 @@
 - name: get Drupal solr integration via apachesolr
   git:
     repo: http://git.drupal.org/project/{{ drupal_solr_package }}.git
-    dest: /home/{{ user }}/drupal_solr
+    dest: /home/{{ solr_user }}/drupal_solr
     version: 7.x-1.7
     depth: 1
   when: drupal_solr_package == "apachesolr"
 
 - name: copy Drupal Solr config into Solr
-  shell: cp -r /home/{{ user }}/drupal_solr/solr-conf/4.x/. /home/solr/{{ default_collection_name }}/conf/
+  shell: cp -r /home/{{ solr_user }}/drupal_solr/solr-conf/4.x/. /home/solr/{{ default_collection_name }}/conf/
   when: drupal_solr_package == "search_api_solr"
   sudo: true
   notify:
    - restart tomcat6
 
 - name: copy Drupal Solr config into Solr
-  shell: cp -r /home/{{ user }}/drupal_solr/solr-conf/solr-4.x/. /home/solr/{{ default_collection_name }}/conf/
+  shell: cp -r /home/{{ solr_user }}/drupal_solr/solr-conf/solr-4.x/. /home/solr/{{ default_collection_name }}/conf/
   when: drupal_solr_package == "apachesolr"
   sudo: true
   notify:
@@ -95,7 +95,7 @@
   sudo: true
 
 - name: copy the needed class directories over
-  command: cp -r /home/{{ user }}/solr-{{ solr_version }}/contrib/{{ item }} /home/solr/lib/contrib/{{ item }} creates=/home/solr/lib/contrib/{{ item }}
+  command: cp -r /home/{{ solr_user }}/solr-{{ solr_version }}/contrib/{{ item }} /home/solr/lib/contrib/{{ item }} creates=/home/solr/lib/contrib/{{ item }}
   sudo: true
   with_items:
     - analysis-extras
