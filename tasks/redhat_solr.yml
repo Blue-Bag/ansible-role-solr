@@ -6,7 +6,7 @@
   command: tar -zxf /home/{{ solr_user }}/solr-{{ solr_version }}.tgz chdir=/home/{{ solr_user }} creates=/home/{{ solr_user }}/solr-{{ solr_version }}
 
 - name: copy Solr war file
-  command: cp /home/{{ solr_user }}/solr-{{ solr_version }}/dist/solr-{{ solr_version }}.war /var/lib/tomcat6/webapps/solr.war creates=/var/lib/tomcat6/webapps/solr.war
+  command: cp /home/{{ solr_user }}/solr-{{ solr_version }}/dist/solr-{{ solr_version }}.war /var/lib/tomcat6/webapps/solr.war owner=tomcat group=tomcat creates=/var/lib/tomcat6/webapps/solr.war
   sudo: true
 
 - name: list solr files (in order to copy)
