@@ -20,7 +20,7 @@
 - name: copy Solr instance
   command: cp -ar /home/{{ solr_user }}/solr-{{ solr_version }}/example/solr/{{ item }} /home/solr creates=/home/solr/{{ item }}
   become: true
-  with_items: solrfiles.stdout_lines
+  with_items: "{{ solrfiles.stdout_lines }}"
 
 - name: rename the collection1 directory to {{ default_collection_name }}
   command: mv /home/solr/collection1 /home/solr/{{ default_collection_name }} creates=/home/solr/{{ default_collection_name }}
@@ -45,7 +45,7 @@
 
 - name: copy solr lib files
   command: cp /home/{{ solr_user }}/solr-{{ solr_version }}/dist/{{ item }} /home/solr/lib/{{ item }} creates=/home/solr/lib/{{ item }}
-  with_items: solrjarfiles.stdout_lines
+  with_items: "{{ solrjarfiles.stdout_lines }}"
   become: true
 
 - name: force restart of tomcat6
